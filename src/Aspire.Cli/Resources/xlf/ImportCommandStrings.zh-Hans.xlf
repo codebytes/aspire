@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="zh-Hans" original="../ImportCommandStrings.resx">
+    <body>
+      <trans-unit id="AuthenticatingWithAzure">
+        <source>Authenticating with Azure...</source>
+        <target state="new">Authenticating with Azure...</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AuthenticationFailed">
+        <source>Failed to authenticate with Azure. Please ensure you are logged in with 'az login' or have valid credentials configured.</source>
+        <target state="new">Failed to authenticate with Azure. Please ensure you are logged in with 'az login' or have valid credentials configured.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AzureSubcommandDescription">
+        <source>Import Azure resources from a live resource group into an Aspire AppHost project</source>
+        <target state="new">Import Azure resources from a live resource group into an Aspire AppHost project</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BicepCliNotFound">
+        <source>The Bicep CLI was not found. Install it from https://learn.microsoft.com/azure/azure-resource-manager/bicep/install or use 'az bicep install'.</source>
+        <target state="new">The Bicep CLI was not found. Install it from https://learn.microsoft.com/azure/azure-resource-manager/bicep/install or use 'az bicep install'.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BicepCompileFailed">
+        <source>Failed to compile Bicep file: {0}</source>
+        <target state="new">Failed to compile Bicep file: {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BicepImportFailed">
+        <source>Failed to import Bicep resources: {0}</source>
+        <target state="new">Failed to import Bicep resources: {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BicepSubcommandDescription">
+        <source>Import Azure resources from Bicep files into an Aspire AppHost project</source>
+        <target state="new">Import Azure resources from Bicep files into an Aspire AppHost project</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CompilingBicep">
+        <source>Compiling Bicep to ARM template...</source>
+        <target state="new">Compiling Bicep to ARM template...</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ComputeResourceDetected">
+        <source>Compute resource '{0}' detected — a placeholder will be generated.</source>
+        <target state="new">Compute resource '{0}' detected — a placeholder will be generated.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ConfirmImport">
+        <source>Import {0} resources to '{1}'?</source>
+        <target state="new">Import {0} resources to '{1}'?</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Description">
+        <source>Import infrastructure resources into an Aspire AppHost project</source>
+        <target state="new">Import infrastructure resources into an Aspire AppHost project</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DiscoveringResources">
+        <source>Discovering resources...</source>
+        <target state="new">Discovering resources...</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="GeneratingAppHost">
+        <source>Generating AppHost project...</source>
+        <target state="new">Generating AppHost project...</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="IaCImportComplete">
+        <source>Successfully imported {0} resources from {1} into {2}</source>
+        <target state="new">Successfully imported {0} resources from {1} into {2}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ImportComplete">
+        <source>Successfully imported {0} resources into {1}</source>
+        <target state="new">Successfully imported {0} resources into {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ModeOption">
+        <source>Import mode: 'existing' references pre-deployed resources with .AsExisting(), 'new' generates fresh Add*() calls for Aspire-managed provisioning</source>
+        <target state="new">Import mode: 'existing' references pre-deployed resources with .AsExisting(), 'new' generates fresh Add*() calls for Aspire-managed provisioning</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="NameOption">
+        <source>The name for the generated AppHost project</source>
+        <target state="new">The name for the generated AppHost project</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="NoBicepFilesFound">
+        <source>No .bicep files were found in the specified directory.</source>
+        <target state="new">No .bicep files were found in the specified directory.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="NoIaCResourcesFound">
+        <source>No importable resources were found in the infrastructure files.</source>
+        <target state="new">No importable resources were found in the infrastructure files.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="NoResourcesFound">
+        <source>No resources were found in the selected source.</source>
+        <target state="new">No resources were found in the selected source.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="NoTerraformFilesFound">
+        <source>No .tf files were found in the specified directory.</source>
+        <target state="new">No .tf files were found in the specified directory.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="OutputOption">
+        <source>The output directory for the generated AppHost project</source>
+        <target state="new">The output directory for the generated AppHost project</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ParsingTerraformFiles">
+        <source>Parsing Terraform files...</source>
+        <target state="new">Parsing Terraform files...</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="PathOption">
+        <source>Path to the directory containing infrastructure files</source>
+        <target state="new">Path to the directory containing infrastructure files</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ResourceDiscoveryFailed">
+        <source>Failed to discover resources: {0}</source>
+        <target state="new">Failed to discover resources: {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ResourceGroupOption">
+        <source>The Azure resource group to import from</source>
+        <target state="new">The Azure resource group to import from</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SelectResourceGroup">
+        <source>Select a resource group</source>
+        <target state="new">Select a resource group</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SelectResources">
+        <source>Select which resources to import</source>
+        <target state="new">Select which resources to import</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SelectSubscription">
+        <source>Select an Azure subscription</source>
+        <target state="new">Select an Azure subscription</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SubscriptionOption">
+        <source>The Azure subscription ID to use</source>
+        <target state="new">The Azure subscription ID to use</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TerraformFileAccessFailed">
+        <source>Failed to access Terraform files: {0}</source>
+        <target state="new">Failed to access Terraform files: {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TerraformImportFailed">
+        <source>Failed to import Terraform resources: {0}</source>
+        <target state="new">Failed to import Terraform resources: {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TerraformSubcommandDescription">
+        <source>Import resources from Terraform files into an Aspire AppHost project</source>
+        <target state="new">Import resources from Terraform files into an Aspire AppHost project</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="UnsupportedResourceSkipped">
+        <source>Resource '{0}' ({1}) has no Aspire equivalent and will be added as a comment.</source>
+        <target state="new">Resource '{0}' ({1}) has no Aspire equivalent and will be added as a comment.</target>
+        <note />
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
