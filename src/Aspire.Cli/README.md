@@ -28,6 +28,9 @@ aspire <command> [options]
 |---------|-------------|
 | `new` | Create a new app from an Aspire starter template. |
 | `init` | Initialize Aspire in an existing codebase. |
+| `import azure` | Import resources from a live Azure resource group into an AppHost. (Preview) |
+| `import bicep` | Import resources from Bicep/ARM template files into an AppHost. (Preview) |
+| `import terraform` | Import resources from Terraform files into an AppHost. (Preview) |
 | `add [<integration>]` | Add a hosting integration to the apphost. |
 | `update` | Update integrations in the Aspire project. (Preview) |
 | `run` | Run an apphost in development mode. |
@@ -101,6 +104,18 @@ aspire wait webapi --timeout 60
 
 # Add an integration
 aspire add redis
+
+# Import from a live Azure resource group (Preview)
+aspire config set features.importAzureCommandEnabled true
+aspire import azure
+
+# Import from Bicep infrastructure files (Preview)
+aspire config set features.importBicepCommandEnabled true
+aspire import bicep --path ./infra
+
+# Import from Terraform infrastructure files (Preview)
+aspire config set features.importTerraformCommandEnabled true
+aspire import terraform --path ./infra
 
 # Diagnose environment issues
 aspire doctor

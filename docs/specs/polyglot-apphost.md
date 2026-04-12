@@ -1221,6 +1221,9 @@ classDiagram
 | `aspire run` | `RunAsync` | Gets `RuntimeSpec`, executes via `GuestRuntime` |
 | `aspire publish` | `PublishAsync` | Gets `RuntimeSpec`, executes in publish mode |
 | `aspire add` | `AddPackageAsync` | Add integration package, regenerate SDK |
+| `aspire import azure` | N/A | Discovers live Azure resources, generates C# AppHost with `.AsExisting()` |
+| `aspire import bicep` | N/A | Compiles Bicep to ARM JSON, generates C# AppHost with `.AsExisting()` |
+| `aspire import terraform` | N/A | Parses Terraform `.tf` files, generates C# AppHost with `.AsExisting()` |
 
 ---
 
