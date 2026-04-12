@@ -30,6 +30,9 @@ internal static class KnownFeatures
     public static string ExperimentalPolyglotGo => "experimentalPolyglot:go";
     public static string ExperimentalPolyglotPython => "experimentalPolyglot:python";
     public static string NuGetSignatureVerificationEnabled => "nugetSignatureVerificationEnabled";
+    public static string ImportAzureCommandEnabled => "importAzureCommandEnabled";
+    public static string ImportBicepCommandEnabled => "importBicepCommandEnabled";
+    public static string ImportTerraformCommandEnabled => "importTerraformCommandEnabled";
 
     private static readonly Dictionary<string, FeatureMetadata> s_featureMetadata = new()
     {
@@ -82,11 +85,25 @@ internal static class KnownFeatures
             ExperimentalPolyglotPython,
             "Enable or disable experimental Python language support for polyglot Aspire applications",
             DefaultValue: false),
-
         [NuGetSignatureVerificationEnabled] = new(
             NuGetSignatureVerificationEnabled,
             "Enable or disable defaulting the DOTNET_NUGET_SIGNATURE_VERIFICATION environment variable for spawned processes",
-            DefaultValue: true)
+            DefaultValue: true),
+
+        [ImportAzureCommandEnabled] = new(
+            ImportAzureCommandEnabled,
+            "Enable or disable the 'aspire import azure' command for importing live Azure resources into an AppHost project",
+            DefaultValue: false),
+        
+        [ImportBicepCommandEnabled] = new(
+            ImportBicepCommandEnabled,
+            "Enable or disable the 'aspire import bicep' command for importing Bicep files into an AppHost project",
+            DefaultValue: false),
+        
+        [ImportTerraformCommandEnabled] = new(
+            ImportTerraformCommandEnabled,
+            "Enable or disable the 'aspire import terraform' command for importing Terraform files into an AppHost project",
+            DefaultValue: false)
     };
 
     /// <summary>

@@ -26,6 +26,7 @@ using Aspire.Cli.Configuration;
 using Aspire.Cli.Diagnostics;
 using Aspire.Cli.DotNet;
 using Aspire.Cli.Git;
+using Aspire.Cli.Import;
 using Aspire.Cli.Interaction;
 using Aspire.Cli.Layout;
 using Aspire.Cli.Mcp;
@@ -451,6 +452,15 @@ public class Program
         // capturing stdin/stdout before the MCP server command is actually executed.
         builder.Services.AddSingleton<IMcpTransportFactory, StdioMcpTransportFactory>();
 
+        // Import services.
+        builder.Services.AddSingleton<IImportCommandPrompter, ImportCommandPrompter>();
+        builder.Services.AddSingleton<IAzureResourceDiscoveryService, AzureResourceDiscoveryService>();
+        builder.Services.AddSingleton<IAppHostCodeGenerator, AppHostCodeGenerator>();
+        builder.Services.AddSingleton<BicepFileParser>();
+        builder.Services.AddSingleton<TerraformFileParser>();
+        builder.Services.AddSingleton<IResourceMapper, AzureResourceMapper>();
+        builder.Services.AddSingleton<ResourceMappingService>();
+
         // Commands.
         builder.Services.AddTransient<AppHostLauncher>();
         builder.Services.AddTransient<NewCommand>();
@@ -511,6 +521,10 @@ public class Program
         builder.Services.AddTransient<SdkDumpCommand>();
         builder.Services.AddTransient<RestoreCommand>();
         builder.Services.AddTransient<SetupCommand>();
+        builder.Services.AddTransient<ImportCommand>();
+        builder.Services.AddTransient<ImportAzureCommand>();
+        builder.Services.AddTransient<ImportBicepCommand>();
+        builder.Services.AddTransient<ImportTerraformCommand>();
 #if DEBUG
         builder.Services.AddTransient<RenderCommand>();
 #endif

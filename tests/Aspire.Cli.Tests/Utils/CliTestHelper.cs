@@ -38,6 +38,7 @@ using Aspire.Cli.Utils.EnvironmentChecker;
 using Aspire.Cli.Packaging;
 using Aspire.Cli.Caching;
 using Aspire.Cli.Diagnostics;
+using Aspire.Cli.Import;
 using Aspire.Cli.Npm;
 
 namespace Aspire.Cli.Tests.Utils;
@@ -174,6 +175,15 @@ internal static class CliTestHelper
         services.AddSingleton<IApiDocsFetcher, TestApiDocsFetcher>();
         services.AddSingleton(options.ApiDocsIndexServiceFactory);
 
+        // Import services
+        services.AddSingleton<IImportCommandPrompter, ImportCommandPrompter>();
+        services.AddSingleton<IAzureResourceDiscoveryService, NoOpAzureResourceDiscoveryService>();
+        services.AddSingleton<IAppHostCodeGenerator, AppHostCodeGenerator>();
+        services.AddSingleton<BicepFileParser>();
+        services.AddSingleton<TerraformFileParser>();
+        services.AddSingleton<IResourceMapper, AzureResourceMapper>();
+        services.AddSingleton<ResourceMappingService>();
+
         services.AddTransient<RootCommand>();
         services.AddTransient<NewCommand>();
         services.AddTransient<InitCommand>();
@@ -236,6 +246,10 @@ internal static class CliTestHelper
         services.AddTransient<SecretPathCommand>();
         services.AddTransient<SecretDeleteCommand>();
         services.AddTransient<SecretStoreResolver>();
+        services.AddTransient<ImportCommand>();
+        services.AddTransient<ImportAzureCommand>();
+        services.AddTransient<ImportBicepCommand>();
+        services.AddTransient<ImportTerraformCommand>();
 #if DEBUG
         services.AddTransient<RenderCommand>();
 #endif

@@ -138,6 +138,7 @@ internal sealed class RootCommand : BaseRootCommand
         SdkCommand sdkCommand,
         RestoreCommand restoreCommand,
         SetupCommand setupCommand,
+        ImportCommand importCommand,
 #if DEBUG
         RenderCommand renderCommand,
 #endif
@@ -227,6 +228,7 @@ internal sealed class RootCommand : BaseRootCommand
         Subcommands.Add(docsCommand);
         Subcommands.Add(dashboardCommand);
         Subcommands.Add(secretCommand);
+        Subcommands.Add(importCommand);
 
 #if DEBUG
         Subcommands.Add(renderCommand);
