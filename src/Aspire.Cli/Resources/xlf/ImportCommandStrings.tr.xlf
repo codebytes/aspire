@@ -88,8 +88,8 @@
         <note />
       </trans-unit>
       <trans-unit id="ModeOption">
-        <source>Import mode: 'existing' references pre-deployed resources with .RunAsExisting(), 'new' generates fresh Add*() calls for Aspire-managed provisioning</source>
-        <target state="new">Import mode: 'existing' references pre-deployed resources with .RunAsExisting(), 'new' generates fresh Add*() calls for Aspire-managed provisioning</target>
+        <source>Import mode: 'new' (default) generates Add*() calls for Aspire-managed provisioning, 'existing' references pre-deployed resources with .RunAsExisting()</source>
+        <target state="new">Import mode: 'new' (default) generates Add*() calls for Aspire-managed provisioning, 'existing' references pre-deployed resources with .RunAsExisting()</target>
         <note />
       </trans-unit>
       <trans-unit id="NameOption">

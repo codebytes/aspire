@@ -26,7 +26,7 @@ internal sealed class AppHostCodeGenerator : IAppHostCodeGenerator
         "void", "volatile", "while"
     ];
 
-    public string GenerateProgramCs(IReadOnlyList<ImportedResource> resources, string sourceLabel, ImportMode mode = ImportMode.Existing, string? resourceGroup = null)
+    public string GenerateProgramCs(IReadOnlyList<ImportedResource> resources, string sourceLabel, ImportMode mode = ImportMode.New, string? resourceGroup = null)
     {
         var sb = new StringBuilder();
         var modeLabel = mode == ImportMode.Existing ? "existing" : "new";

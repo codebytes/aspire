@@ -88,7 +88,7 @@
     <value>Path to the directory containing infrastructure files</value>
   </data>
   <data name="ModeOption" xml:space="preserve">
-    <value>Import mode: 'existing' references pre-deployed resources with .RunAsExisting(), 'new' generates fresh Add*() calls for Aspire-managed provisioning</value>
+    <value>Import mode: 'new' (default) generates Add*() calls for Aspire-managed provisioning, 'existing' references pre-deployed resources with .RunAsExisting()</value>
   </data>
   <data name="AuthenticatingWithAzure" xml:space="preserve">
     <value>Authenticating with Azure...</value>

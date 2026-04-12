@@ -7,6 +7,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Aspire.Cli.Import;
 
+/// <summary>
+/// Discovers live Azure resources using the Azure Resource Manager SDK.
+/// </summary>
 internal sealed class AzureResourceDiscoveryService(ILogger<AzureResourceDiscoveryService> logger) : IAzureResourceDiscoveryService
 {
     private readonly Lazy<ArmClient> _armClient = new(() => new ArmClient(new DefaultAzureCredential()));

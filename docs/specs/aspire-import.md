@@ -96,8 +96,8 @@ enum ImportSupportLevel { Supported, Placeholder, Unsupported }
 enum ImportMode { Existing, New }
 ```
 
-- **Existing** (default): Generates `.AsExisting(name, resourceGroup)` — resources must already be deployed
-- **New**: Generates plain `Add*()` calls — Aspire manages provisioning
+- **New** (default): Generates plain `Add*()` calls — Aspire manages provisioning
+- **Existing**: Generates `.RunAsExisting(name, resourceGroup)` — resources must already be deployed
 
 #### `IResourceMapper` — Provider-aware mapping (future)
 
@@ -317,7 +317,7 @@ The parent `aspire import` command is visible when any child flag is enabled.
 |--------|-------------|---------|
 | `--output, -o` | Output directory for generated project | `{cwd}/{name}.AppHost` |
 | `--name, -n` | Project name | Derived from source |
-| `--mode` | `existing` (AsExisting) or `new` (Aspire provisions) | `existing` |
+| `--mode` | `new` (Aspire provisions) or `existing` (RunAsExisting) | `new` |
 
 ### Azure-specific Options
 

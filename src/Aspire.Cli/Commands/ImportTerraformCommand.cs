@@ -35,7 +35,7 @@ internal sealed class ImportTerraformCommand : BaseCommand
     private static readonly Option<string> s_modeOption = new("--mode")
     {
         Description = ImportCommandStrings.ModeOption,
-        DefaultValueFactory = _ => "existing",
+        DefaultValueFactory = _ => "new",
     };
 
     private readonly TerraformFileParser _terraformParser;
