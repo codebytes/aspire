@@ -12,6 +12,16 @@
         <target state="new">Failed to authenticate with Azure. Please ensure you are logged in with 'az login' or have valid credentials configured.</target>
         <note />
       </trans-unit>
+      <trans-unit id="AzureFileAccessFailed">
+        <source>Failed to access files during Azure import: {0}</source>
+        <target state="new">Failed to access files during Azure import: {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="AzureImportFailed">
+        <source>Failed to import Azure resources: {0}</source>
+        <target state="new">Failed to import Azure resources: {0}</target>
+        <note />
+      </trans-unit>
       <trans-unit id="AzureSubcommandDescription">
         <source>Import Azure resources from a live resource group into an Aspire AppHost project</source>
         <target state="new">Import Azure resources from a live resource group into an Aspire AppHost project</target>
@@ -78,8 +88,8 @@
         <note />
       </trans-unit>
       <trans-unit id="ModeOption">
-        <source>Import mode: 'existing' references pre-deployed resources with .AsExisting(), 'new' generates fresh Add*() calls for Aspire-managed provisioning</source>
-        <target state="new">Import mode: 'existing' references pre-deployed resources with .AsExisting(), 'new' generates fresh Add*() calls for Aspire-managed provisioning</target>
+        <source>Import mode: 'existing' references pre-deployed resources with .RunAsExisting(), 'new' generates fresh Add*() calls for Aspire-managed provisioning</source>
+        <target state="new">Import mode: 'existing' references pre-deployed resources with .RunAsExisting(), 'new' generates fresh Add*() calls for Aspire-managed provisioning</target>
         <note />
       </trans-unit>
       <trans-unit id="NameOption">

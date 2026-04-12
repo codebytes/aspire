@@ -14,8 +14,9 @@ internal interface IAppHostCodeGenerator
     /// <param name="resources">The imported resources to generate code for.</param>
     /// <param name="sourceLabel">A label identifying the import source (e.g., file path or environment name).</param>
     /// <param name="mode">Controls whether resources reference existing infrastructure or are provisioned by Aspire.</param>
+    /// <param name="resourceGroup">The Azure resource group name for existing resources. When <c>null</c>, the generated code passes <c>null</c> to use the current resource group.</param>
     /// <returns>The generated Program.cs file content.</returns>
-    string GenerateProgramCs(IReadOnlyList<ImportedResource> resources, string sourceLabel, ImportMode mode = ImportMode.Existing);
+    string GenerateProgramCs(IReadOnlyList<ImportedResource> resources, string sourceLabel, ImportMode mode = ImportMode.Existing, string? resourceGroup = null);
 
     /// <summary>
     /// Generates the .csproj content for an Aspire AppHost project.

@@ -56,10 +56,9 @@ internal sealed class BicepFileParser(
             return bicepFiles[0];
         }
 
-        logger.LogWarning(
-            "Multiple Bicep files found in {DirectoryPath} and no main.bicep exists. Cannot determine entry point.",
-            directoryPath);
-        return null;
+        throw new InvalidOperationException(
+            $"Multiple Bicep files found in '{directoryPath}' and no main.bicep exists. " +
+            "Either rename your entry point to 'main.bicep' or specify the file to compile.");
     }
 
     internal async Task<string?> CompileBicepToArmAsync(string bicepFile, CancellationToken cancellationToken)
@@ -168,6 +167,20 @@ internal sealed class BicepFileParser(
 
             var sourceAddress = $"/subscriptions/imported/resourceGroups/bicep/providers/{resourceType}/{name}";
 
+            // For nested deployments, recurse into the template but don't add the deployment wrapper itself.
+            if (string.Equals(resourceType, "Microsoft.Resources/deployments", StringComparison.OrdinalIgnoreCase))
+            {
+                if (resource.TryGetProperty("properties", out var propsElement) &&
+                    propsElement.TryGetProperty("template", out var templateElement) &&
+                    templateElement.TryGetProperty("resources", out var nestedResources) &&
+                    nestedResources.ValueKind == JsonValueKind.Array)
+                {
+                    ExtractResources(nestedResources, results);
+                }
+
+                continue;
+            }
+
             results.Add(new DiscoveredResource(
                 Name: name,
                 SourceType: resourceType,
@@ -176,16 +189,6 @@ internal sealed class BicepFileParser(
                 SourceAddress: sourceAddress,
                 Provider: ResourceProvider.Azure,
                 Tags: tags));
-
-            // Recurse into nested deployments.
-            if (string.Equals(resourceType, "Microsoft.Resources/deployments", StringComparison.OrdinalIgnoreCase) &&
-                resource.TryGetProperty("properties", out var propsElement) &&
-                propsElement.TryGetProperty("template", out var templateElement) &&
-                templateElement.TryGetProperty("resources", out var nestedResources) &&
-                nestedResources.ValueKind == JsonValueKind.Array)
-            {
-                ExtractResources(nestedResources, results);
-            }
         }
     }
 

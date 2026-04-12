@@ -248,5 +248,17 @@ namespace Aspire.Cli.Resources {
                 return ResourceManager.GetString("IaCImportComplete", resourceCulture);
             }
         }
+        
+        internal static string AzureFileAccessFailed {
+            get {
+                return ResourceManager.GetString("AzureFileAccessFailed", resourceCulture);
+            }
+        }
+        
+        internal static string AzureImportFailed {
+            get {
+                return ResourceManager.GetString("AzureImportFailed", resourceCulture);
+            }
+        }
     }
 }

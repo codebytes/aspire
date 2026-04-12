@@ -237,7 +237,7 @@ public class TerraformFileParserTests(ITestOutputHelper outputHelper)
         Assert.Contains("AddAzureKeyVault", programCs);
         Assert.Contains("AddAzureServiceBus", programCs);
         Assert.Contains("AddAzureEventHubs", programCs);
-        Assert.Contains(".AsExisting(", programCs);
+        Assert.Contains(".RunAsExisting(", programCs);
         Assert.Contains("TODO", programCs);
 
         var csproj = generator.GenerateCsproj(mapped, "TestAppHost");

@@ -52,7 +52,7 @@ public class AppHostCodeGeneratorTests(ITestOutputHelper outputHelper)
         SupportLevel: ImportSupportLevel.Unsupported);
 
     [Fact]
-    public void GenerateProgramCs_ExistingMode_EmitsAsExisting()
+    public void GenerateProgramCs_ExistingMode_EmitsRunAsExisting()
     {
         var generator = new AppHostCodeGenerator();
         var resources = new List<ImportedResource> { s_cosmosResource, s_redisResource };
@@ -61,7 +61,7 @@ public class AppHostCodeGeneratorTests(ITestOutputHelper outputHelper)
 
         outputHelper.WriteLine(code);
 
-        Assert.Contains(".AsExisting(", code);
+        Assert.Contains(".RunAsExisting(", code);
         Assert.Contains("AddAzureCosmosDB(\"cosmos-db\")", code);
         Assert.Contains("AddAzureRedis(\"my-redis\")", code);
         Assert.Contains("mode: existing", code);
@@ -69,7 +69,7 @@ public class AppHostCodeGeneratorTests(ITestOutputHelper outputHelper)
     }
 
     [Fact]
-    public void GenerateProgramCs_NewMode_NoAsExisting()
+    public void GenerateProgramCs_NewMode_NoRunAsExisting()
     {
         var generator = new AppHostCodeGenerator();
         var resources = new List<ImportedResource> { s_cosmosResource, s_redisResource };
@@ -78,7 +78,7 @@ public class AppHostCodeGeneratorTests(ITestOutputHelper outputHelper)
 
         outputHelper.WriteLine(code);
 
-        Assert.DoesNotContain(".AsExisting(", code);
+        Assert.DoesNotContain(".RunAsExisting(", code);
         Assert.Contains("AddAzureCosmosDB(\"cosmos-db\")", code);
         Assert.Contains("AddAzureRedis(\"my-redis\")", code);
         Assert.Contains("mode: new", code);

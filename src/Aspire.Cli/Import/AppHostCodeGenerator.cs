@@ -26,7 +26,7 @@ internal sealed class AppHostCodeGenerator : IAppHostCodeGenerator
         "void", "volatile", "while"
     ];
 
-    public string GenerateProgramCs(IReadOnlyList<ImportedResource> resources, string sourceLabel, ImportMode mode = ImportMode.Existing)
+    public string GenerateProgramCs(IReadOnlyList<ImportedResource> resources, string sourceLabel, ImportMode mode = ImportMode.Existing, string? resourceGroup = null)
     {
         var sb = new StringBuilder();
         var modeLabel = mode == ImportMode.Existing ? "existing" : "new";
@@ -55,7 +55,10 @@ internal sealed class AppHostCodeGenerator : IAppHostCodeGenerator
                 {
                     if (mode == ImportMode.Existing)
                     {
-                        sb.AppendLine(CultureInfo.InvariantCulture, $"var {varName} = builder.{resource.AspireBuilderMethod}(\"{resource.SourceResourceName}\").AsExisting(\"{resource.SourceResourceName}\", \"{sourceLabel}\");");
+                        var rgArg = resourceGroup is not null
+                            ? $"\"{resourceGroup}\""
+                            : "null";
+                        sb.AppendLine(CultureInfo.InvariantCulture, $"var {varName} = builder.{resource.AspireBuilderMethod}(\"{resource.SourceResourceName}\").RunAsExisting(\"{resource.SourceResourceName}\", {rgArg});");
                     }
                     else
                     {
@@ -117,6 +120,7 @@ internal sealed class AppHostCodeGenerator : IAppHostCodeGenerator
         sb.AppendLine("  </PropertyGroup>");
         sb.AppendLine();
         sb.AppendLine("  <ItemGroup>");
+        sb.AppendLine("    <!-- TODO: Set package versions to match your Aspire installation -->");
         sb.AppendLine("    <PackageReference Include=\"Aspire.AppHost.Sdk\" Version=\"10.0.0-preview.5\" />");
 
         foreach (var package in packages)

@@ -139,7 +139,7 @@ internal sealed class ImportAzureCommand : BaseCommand
             }
 
             var sourceLabel = $"{subscriptionId}/{resourceGroupName}";
-            GenerateProject(selected, sourceLabel, outputPath, projectName, mode);
+            GenerateProject(selected, sourceLabel, outputPath, projectName, mode, resourceGroupName);
 
             InteractionService.DisplaySuccess(ImportCommandStrings.ImportComplete);
             return ExitCodeConstants.Success;
@@ -156,14 +156,26 @@ internal sealed class ImportAzureCommand : BaseCommand
             InteractionService.DisplayError(ImportCommandStrings.ResourceDiscoveryFailed);
             return ExitCodeConstants.InvalidCommand;
         }
+        catch (IOException ex)
+        {
+            Telemetry.RecordError(ImportCommandStrings.AzureFileAccessFailed, ex);
+            InteractionService.DisplayError(ImportCommandStrings.AzureFileAccessFailed);
+            return ExitCodeConstants.InvalidCommand;
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            Telemetry.RecordError(ImportCommandStrings.AzureImportFailed, ex);
+            InteractionService.DisplayError(ImportCommandStrings.AzureImportFailed);
+            return ExitCodeConstants.InvalidCommand;
+        }
     }
 
-    private void GenerateProject(IReadOnlyList<ImportedResource> resources, string sourceLabel, string outputPath, string projectName, ImportMode mode)
+    private void GenerateProject(IReadOnlyList<ImportedResource> resources, string sourceLabel, string outputPath, string projectName, ImportMode mode, string? resourceGroup)
     {
         InteractionService.DisplayMessage(KnownEmojis.Gear, ImportCommandStrings.GeneratingAppHost);
 
         Directory.CreateDirectory(outputPath);
-        File.WriteAllText(Path.Combine(outputPath, "Program.cs"), _codeGenerator.GenerateProgramCs(resources, sourceLabel, mode));
+        File.WriteAllText(Path.Combine(outputPath, "Program.cs"), _codeGenerator.GenerateProgramCs(resources, sourceLabel, mode, resourceGroup));
         File.WriteAllText(Path.Combine(outputPath, $"{projectName}.csproj"), _codeGenerator.GenerateCsproj(resources, projectName));
 
         ReportResourceNotes(resources);

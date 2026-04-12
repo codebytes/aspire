@@ -88,7 +88,7 @@
     <value>Path to the directory containing infrastructure files</value>
   </data>
   <data name="ModeOption" xml:space="preserve">
-    <value>Import mode: 'existing' references pre-deployed resources with .AsExisting(), 'new' generates fresh Add*() calls for Aspire-managed provisioning</value>
+    <value>Import mode: 'existing' references pre-deployed resources with .RunAsExisting(), 'new' generates fresh Add*() calls for Aspire-managed provisioning</value>
   </data>
   <data name="AuthenticatingWithAzure" xml:space="preserve">
     <value>Authenticating with Azure...</value>
@@ -161,5 +161,11 @@
   </data>
   <data name="IaCImportComplete" xml:space="preserve">
     <value>Successfully imported {0} resources from {1} into {2}</value>
+  </data>
+  <data name="AzureFileAccessFailed" xml:space="preserve">
+    <value>Failed to access files during Azure import: {0}</value>
+  </data>
+  <data name="AzureImportFailed" xml:space="preserve">
+    <value>Failed to import Azure resources: {0}</value>
   </data>
 </root>

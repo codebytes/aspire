@@ -102,12 +102,11 @@ public class BicepFileParserTests(ITestOutputHelper outputHelper)
             outputHelper.WriteLine($"  {r.SourceType}: {r.Name}");
         }
 
-        Assert.Equal(3, resources.Count);
+        Assert.Equal(2, resources.Count);
 
-        Assert.Equal("Microsoft.Resources/deployments", resources[0].SourceType);
-        Assert.Equal("Microsoft.ServiceBus/namespaces", resources[1].SourceType);
-        Assert.Equal("my-sb", resources[1].Name);
-        Assert.Equal("Microsoft.KeyVault/vaults", resources[2].SourceType);
+        Assert.Equal("Microsoft.ServiceBus/namespaces", resources[0].SourceType);
+        Assert.Equal("my-sb", resources[0].Name);
+        Assert.Equal("Microsoft.KeyVault/vaults", resources[1].SourceType);
     }
 
     [Fact]
@@ -208,7 +207,7 @@ public class BicepFileParserTests(ITestOutputHelper outputHelper)
 
         outputHelper.WriteLine(programCs);
 
-        Assert.Contains(".AsExisting(", programCs);
+        Assert.Contains(".RunAsExisting(", programCs);
         Assert.Contains("AddAzureCosmosDB", programCs);
         Assert.Contains("AddAzureStorage", programCs);
         Assert.Contains("AddAzureRedis", programCs);
@@ -285,14 +284,11 @@ public class BicepFileParserTests(ITestOutputHelper outputHelper)
             outputHelper.WriteLine($"  {r.SourceType}: {r.Name}");
         }
 
-        var nonDeploymentResources = discovered
-            .Where(r => !r.SourceType.Equals("Microsoft.Resources/deployments", StringComparison.OrdinalIgnoreCase))
-            .ToList();
-
-        Assert.Equal(3, nonDeploymentResources.Count);
-        Assert.Contains(nonDeploymentResources, r => r.Name == "top-cosmos");
-        Assert.Contains(nonDeploymentResources, r => r.Name == "level1-storage");
-        Assert.Contains(nonDeploymentResources, r => r.Name == "level2-redis");
+        Assert.Equal(3, discovered.Count);
+        Assert.Contains(discovered, r => r.Name == "top-cosmos");
+        Assert.Contains(discovered, r => r.Name == "level1-storage");
+        Assert.Contains(discovered, r => r.Name == "level2-redis");
+        Assert.DoesNotContain(discovered, r => r.SourceType.Equals("Microsoft.Resources/deployments", StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]
