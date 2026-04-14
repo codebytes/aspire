@@ -257,4 +257,49 @@ public class AppHostCodeGeneratorTests(ITestOutputHelper outputHelper)
 
         Assert.DoesNotContain("Aspire.Hosting.Azure", csproj);
     }
+
+    [Fact]
+    public void GenerateProgramCs_DuplicateResourceNames_Deduplicates()
+    {
+        var generator = new AppHostCodeGenerator();
+        var dup1 = s_cosmosResource with { Name = "cosmosDb1", SourceResourceName = "shared-name" };
+        var dup2 = s_cosmosResource with { Name = "cosmosDb2", SourceResourceName = "shared-name" };
+        var resources = new List<ImportedResource> { dup1, dup2 };
+
+        var code = generator.GenerateProgramCs(resources, "test-source", ImportMode.Existing);
+
+        outputHelper.WriteLine(code);
+
+        Assert.Contains("AddAzureCosmosDB(\"shared-name\")", code);
+        Assert.Contains("AddAzureCosmosDB(\"shared-name-2\")", code);
+    }
+
+    [Fact]
+    public void GenerateProgramCs_AllUnsupported_NoRunAsExistingCalls()
+    {
+        var generator = new AppHostCodeGenerator();
+        var resources = new List<ImportedResource> { s_unsupportedResource };
+
+        var code = generator.GenerateProgramCs(resources, "test-source", ImportMode.Existing);
+
+        outputHelper.WriteLine(code);
+
+        Assert.DoesNotContain(".RunAsExisting(", code);
+        Assert.Contains("var builder = DistributedApplication.CreateBuilder(args);", code);
+        Assert.Contains("builder.Build().Run();", code);
+    }
+
+    [Fact]
+    public void GenerateCsproj_MatchesAppHostShape()
+    {
+        var generator = new AppHostCodeGenerator();
+        var resources = new List<ImportedResource> { s_cosmosResource };
+
+        var csproj = generator.GenerateCsproj(resources, "TestAppHost");
+
+        outputHelper.WriteLine(csproj);
+
+        Assert.Contains("<Sdk Name=\"Aspire.AppHost.Sdk\"", csproj);
+        Assert.DoesNotContain("<PackageReference Include=\"Aspire.AppHost.Sdk\"", csproj);
+    }
 }

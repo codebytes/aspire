@@ -319,4 +319,41 @@ public class BicepFileParserTests(ITestOutputHelper outputHelper)
 
         Assert.Empty(resources);
     }
+
+    [Fact]
+    public void ParseArmJsonResources_ChildResources_Recurses()
+    {
+        var armJson = """
+        {
+          "resources": [
+            {
+              "type": "Microsoft.Sql/servers",
+              "name": "my-sql-server",
+              "location": "eastus",
+              "resources": [
+                {
+                  "type": "Microsoft.Sql/servers/databases",
+                  "name": "my-database",
+                  "location": "eastus"
+                }
+              ]
+            }
+          ]
+        }
+        """;
+
+        var resources = BicepFileParser.ParseArmJsonResources(armJson);
+
+        outputHelper.WriteLine($"Found {resources.Count} resources");
+        foreach (var r in resources)
+        {
+            outputHelper.WriteLine($"  {r.SourceType}: {r.Name}");
+        }
+
+        Assert.Equal(2, resources.Count);
+        Assert.Equal("Microsoft.Sql/servers", resources[0].SourceType);
+        Assert.Equal("my-sql-server", resources[0].Name);
+        Assert.Equal("Microsoft.Sql/servers/databases", resources[1].SourceType);
+        Assert.Equal("my-database", resources[1].Name);
+    }
 }

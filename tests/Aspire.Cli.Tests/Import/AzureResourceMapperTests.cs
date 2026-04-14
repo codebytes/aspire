@@ -164,4 +164,28 @@ public class AzureResourceMapperTests(ITestOutputHelper outputHelper)
         var mapper = new AzureResourceMapper();
         Assert.Equal(ResourceProvider.Azure, mapper.Provider);
     }
+
+    [Fact]
+    public void TryMap_KustoCluster_UsesCorrectApiName()
+    {
+        var mapper = new AzureResourceMapper();
+        var resource = new DiscoveredResource(
+            Name: "my-kusto",
+            SourceType: "Microsoft.Kusto/clusters",
+            Kind: null,
+            Location: "eastus",
+            SourceAddress: "/subscriptions/sub/providers/Microsoft.Kusto/clusters/my-kusto",
+            Provider: ResourceProvider.Azure,
+            Tags: null);
+
+        var result = mapper.TryMap(resource, out var mapping);
+
+        Assert.True(result);
+        Assert.NotNull(mapping);
+        Assert.Equal("AddAzureKustoCluster", mapping.AspireBuilderMethod);
+        Assert.Equal("Aspire.Hosting.Azure.Kusto", mapping.NuGetPackage);
+        Assert.Equal(ImportSupportLevel.Supported, mapping.SupportLevel);
+
+        outputHelper.WriteLine($"Mapped {resource.SourceType} → {mapping.AspireBuilderMethod}");
+    }
 }

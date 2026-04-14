@@ -244,4 +244,41 @@ public class TerraformFileParserTests(ITestOutputHelper outputHelper)
         Assert.Contains("Aspire.Hosting.Azure.CosmosDB", csproj);
         Assert.Contains("Aspire.Hosting.Azure.Storage", csproj);
     }
+
+    [Fact]
+    public async Task ParseAsync_BlockComments_HandledCorrectly()
+    {
+        using var workspace = TemporaryWorkspace.Create(outputHelper);
+        var dir = workspace.WorkspaceRoot.FullName;
+        await File.WriteAllTextAsync(Path.Combine(dir, "main.tf"), """
+            /* This entire block is commented out
+            resource "azurerm_cosmosdb_account" "hidden" {
+              name     = "hidden-cosmos"
+              location = "eastus"
+            }
+            */
+
+            resource "azurerm_storage_account" "visible" {
+              name     = "visible-storage"
+              location = "westus2"
+            }
+
+            resource "azurerm_redis_cache" "also_visible" {
+              name     = /* inline comment */ "my-redis"
+              location = "eastus"
+            }
+            """);
+
+        var parser = CreateParser();
+        var resources = await parser.ParseAsync(dir, CancellationToken.None);
+
+        outputHelper.WriteLine($"Found {resources.Count} resources");
+        foreach (var r in resources)
+        {
+            outputHelper.WriteLine($"  {r.SourceType}: {r.Name}");
+        }
+
+        Assert.DoesNotContain(resources, r => r.Name == "hidden-cosmos");
+        Assert.Contains(resources, r => r.Name == "visible-storage");
+    }
 }

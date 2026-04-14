@@ -158,6 +158,68 @@ public class ImportCommandTests(ITestOutputHelper outputHelper)
         Assert.False(Directory.Exists(outputDir), "Output directory should not be created for empty discovery");
     }
 
+    [Fact]
+    public async Task ImportAzure_Help_ShowsForceOption()
+    {
+        using var workspace = TemporaryWorkspace.Create(outputHelper);
+        var services = CliTestHelper.CreateServiceCollection(workspace, outputHelper, options =>
+        {
+            options.EnabledFeatures = s_allImportFeatures;
+        });
+        var provider = services.BuildServiceProvider();
+
+        var command = provider.GetRequiredService<Aspire.Cli.Commands.RootCommand>();
+        var result = command.Parse("import azure --help");
+
+        var oldOut = Console.Out;
+        using var sw = new StringWriter();
+        Console.SetOut(sw);
+        try
+        {
+            var exitCode = await result.InvokeAsync().DefaultTimeout();
+            Assert.Equal(ExitCodeConstants.Success, exitCode);
+        }
+        finally
+        {
+            Console.SetOut(oldOut);
+        }
+
+        var helpText = sw.ToString();
+        outputHelper.WriteLine(helpText);
+        Assert.Contains("--force", helpText);
+    }
+
+    [Fact]
+    public async Task ImportBicep_Help_ShowsModeOption()
+    {
+        using var workspace = TemporaryWorkspace.Create(outputHelper);
+        var services = CliTestHelper.CreateServiceCollection(workspace, outputHelper, options =>
+        {
+            options.EnabledFeatures = s_allImportFeatures;
+        });
+        var provider = services.BuildServiceProvider();
+
+        var command = provider.GetRequiredService<Aspire.Cli.Commands.RootCommand>();
+        var result = command.Parse("import bicep --help");
+
+        var oldOut = Console.Out;
+        using var sw = new StringWriter();
+        Console.SetOut(sw);
+        try
+        {
+            var exitCode = await result.InvokeAsync().DefaultTimeout();
+            Assert.Equal(ExitCodeConstants.Success, exitCode);
+        }
+        finally
+        {
+            Console.SetOut(oldOut);
+        }
+
+        var helpText = sw.ToString();
+        outputHelper.WriteLine(helpText);
+        Assert.Contains("--mode", helpText);
+    }
+
     private sealed class FakeDiscoveryService(IReadOnlyList<DiscoveredResource> resources) : IAzureResourceDiscoveryService
     {
         public Task<IReadOnlyList<(string Id, string Name)>> GetSubscriptionsAsync(CancellationToken cancellationToken) =>
