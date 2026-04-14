@@ -168,4 +168,19 @@
   <data name="AzureImportFailed" xml:space="preserve">
     <value>Failed to import Azure resources: {0}</value>
   </data>
+  <data name="ForceOption" xml:space="preserve">
+    <value>Overwrite existing output files without prompting</value>
+  </data>
+  <data name="OutputExistsNonInteractive" xml:space="preserve">
+    <value>Output directory already contains a Program.cs file. Use --force to overwrite.</value>
+  </data>
+  <data name="OutputExistsPrompt" xml:space="preserve">
+    <value>Output directory already contains a Program.cs file. It will be overwritten.</value>
+  </data>
+  <data name="SubscriptionRequiredNonInteractive" xml:space="preserve">
+    <value>The --subscription option is required when running non-interactively.</value>
+  </data>
+  <data name="ResourceGroupRequiredNonInteractive" xml:space="preserve">
+    <value>The --resource-group option is required when running non-interactively.</value>
+  </data>
 </root>

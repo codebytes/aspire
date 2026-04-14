@@ -72,6 +72,11 @@
         <target state="new">Discovering resources...</target>
         <note />
       </trans-unit>
+      <trans-unit id="ForceOption">
+        <source>Overwrite existing output files without prompting</source>
+        <target state="new">Overwrite existing output files without prompting</target>
+        <note />
+      </trans-unit>
       <trans-unit id="GeneratingAppHost">
         <source>Generating AppHost project...</source>
         <target state="new">Generating AppHost project...</target>
@@ -117,6 +122,16 @@
         <target state="new">No .tf files were found in the specified directory.</target>
         <note />
       </trans-unit>
+      <trans-unit id="OutputExistsNonInteractive">
+        <source>Output directory already contains a Program.cs file. Use --force to overwrite.</source>
+        <target state="new">Output directory already contains a Program.cs file. Use --force to overwrite.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="OutputExistsPrompt">
+        <source>Output directory already contains a Program.cs file. It will be overwritten.</source>
+        <target state="new">Output directory already contains a Program.cs file. It will be overwritten.</target>
+        <note />
+      </trans-unit>
       <trans-unit id="OutputOption">
         <source>The output directory for the generated AppHost project</source>
         <target state="new">The output directory for the generated AppHost project</target>
@@ -142,6 +157,11 @@
         <target state="new">The Azure resource group to import from</target>
         <note />
       </trans-unit>
+      <trans-unit id="ResourceGroupRequiredNonInteractive">
+        <source>The --resource-group option is required when running non-interactively.</source>
+        <target state="new">The --resource-group option is required when running non-interactively.</target>
+        <note />
+      </trans-unit>
       <trans-unit id="SelectResourceGroup">
         <source>Select a resource group</source>
         <target state="new">Select a resource group</target>
@@ -160,6 +180,11 @@
       <trans-unit id="SubscriptionOption">
         <source>The Azure subscription ID to use</source>
         <target state="new">The Azure subscription ID to use</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SubscriptionRequiredNonInteractive">
+        <source>The --subscription option is required when running non-interactively.</source>
+        <target state="new">The --subscription option is required when running non-interactively.</target>
         <note />
       </trans-unit>
       <trans-unit id="TerraformFileAccessFailed">

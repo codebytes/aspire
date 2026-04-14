@@ -42,6 +42,11 @@ internal sealed class ImportAzureCommand : BaseCommand
         DefaultValueFactory = _ => "new",
     };
 
+    private static readonly Option<bool> s_forceOption = new("--force")
+    {
+        Description = ImportCommandStrings.ForceOption,
+    };
+
     private readonly IAzureResourceDiscoveryService _discoveryService;
     private readonly IAppHostCodeGenerator _codeGenerator;
     private readonly IImportCommandPrompter _prompter;
@@ -69,6 +74,7 @@ internal sealed class ImportAzureCommand : BaseCommand
         Options.Add(s_outputOption);
         Options.Add(s_nameOption);
         Options.Add(s_modeOption);
+        Options.Add(s_forceOption);
     }
 
     protected override async Task<int> ExecuteAsync(ParseResult parseResult, CancellationToken cancellationToken)
@@ -78,6 +84,8 @@ internal sealed class ImportAzureCommand : BaseCommand
         var outputPath = parseResult.GetValue(s_outputOption) ?? Path.Combine(Environment.CurrentDirectory, "AppHost");
         var projectName = parseResult.GetValue(s_nameOption) ?? "AppHost";
         var mode = ParseImportMode(parseResult.GetValue(s_modeOption));
+        var force = parseResult.GetValue(s_forceOption);
+        var nonInteractive = parseResult.GetValue(RootCommand.NonInteractiveOption);
 
         try
         {
@@ -85,6 +93,12 @@ internal sealed class ImportAzureCommand : BaseCommand
 
             if (string.IsNullOrEmpty(subscriptionId))
             {
+                if (nonInteractive)
+                {
+                    InteractionService.DisplayError(ImportCommandStrings.SubscriptionRequiredNonInteractive);
+                    return ExitCodeConstants.InvalidCommand;
+                }
+
                 var subscriptions = await _discoveryService.GetSubscriptionsAsync(cancellationToken).ConfigureAwait(false);
 
                 if (subscriptions.Count == 0)
@@ -98,6 +112,12 @@ internal sealed class ImportAzureCommand : BaseCommand
 
             if (string.IsNullOrEmpty(resourceGroupName))
             {
+                if (nonInteractive)
+                {
+                    InteractionService.DisplayError(ImportCommandStrings.ResourceGroupRequiredNonInteractive);
+                    return ExitCodeConstants.InvalidCommand;
+                }
+
                 var resourceGroups = await _discoveryService.GetResourceGroupsAsync(subscriptionId, cancellationToken).ConfigureAwait(false);
 
                 if (resourceGroups.Count == 0)
@@ -121,11 +141,19 @@ internal sealed class ImportAzureCommand : BaseCommand
 
             var mapped = _mappingService.MapAll(discovered);
 
-            var selected = await _prompter.PromptForResourceSelectionAsync(
-                ImportCommandStrings.SelectResources,
-                mapped,
-                FormatResourceForSelection,
-                cancellationToken).ConfigureAwait(false);
+            IReadOnlyList<ImportedResource> selected;
+            if (nonInteractive)
+            {
+                selected = mapped;
+            }
+            else
+            {
+                selected = await _prompter.PromptForResourceSelectionAsync(
+                    ImportCommandStrings.SelectResources,
+                    mapped,
+                    FormatResourceForSelection,
+                    cancellationToken).ConfigureAwait(false);
+            }
 
             if (selected.Count == 0)
             {
@@ -133,9 +161,15 @@ internal sealed class ImportAzureCommand : BaseCommand
                 return ExitCodeConstants.Success;
             }
 
-            if (!await _prompter.ConfirmImportAsync(selected.Count, outputPath, cancellationToken).ConfigureAwait(false))
+            if (!nonInteractive && !await _prompter.ConfirmImportAsync(selected.Count, outputPath, cancellationToken).ConfigureAwait(false))
             {
                 return ExitCodeConstants.Success;
+            }
+
+            var overwriteCheck = CheckOutputExists(outputPath, nonInteractive, force);
+            if (overwriteCheck is not null)
+            {
+                return overwriteCheck.Value;
             }
 
             var sourceLabel = $"{subscriptionId}/{resourceGroupName}";
@@ -197,8 +231,42 @@ internal sealed class ImportAzureCommand : BaseCommand
         }
     }
 
-    private static ImportMode ParseImportMode(string? value) =>
-        string.Equals(value, "new", StringComparison.OrdinalIgnoreCase) ? ImportMode.New : ImportMode.Existing;
+    private int? CheckOutputExists(string outputPath, bool nonInteractive, bool force)
+    {
+        var programCsPath = Path.Combine(outputPath, "Program.cs");
+        if (!File.Exists(programCsPath))
+        {
+            return null;
+        }
+
+        if (nonInteractive && !force)
+        {
+            InteractionService.DisplayError(ImportCommandStrings.OutputExistsNonInteractive);
+            return ExitCodeConstants.InvalidCommand;
+        }
+
+        if (!nonInteractive && !force)
+        {
+            InteractionService.DisplayMessage(KnownEmojis.Warning, ImportCommandStrings.OutputExistsPrompt);
+        }
+
+        return null;
+    }
+
+    private static ImportMode ParseImportMode(string? value)
+    {
+        if (string.Equals(value, "new", StringComparison.OrdinalIgnoreCase))
+        {
+            return ImportMode.New;
+        }
+
+        if (string.Equals(value, "existing", StringComparison.OrdinalIgnoreCase))
+        {
+            return ImportMode.Existing;
+        }
+
+        throw new ArgumentException($"Invalid import mode '{value}'. Valid values are 'new' or 'existing'.");
+    }
 
     private static string FormatResourceForSelection(ImportedResource resource)
     {

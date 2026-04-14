@@ -60,6 +60,7 @@ internal sealed class TerraformFileParser(ILogger<TerraformFileParser> logger) :
         Dictionary<string, string>? tags = null;
         var inTagsBlock = false;
         var tagsBraceDepth = 0;
+        var inBlockComment = false;
 
         for (var i = 0; i < lines.Length; i++)
         {
@@ -67,6 +68,50 @@ internal sealed class TerraformFileParser(ILogger<TerraformFileParser> logger) :
 
             var line = lines[i];
             var trimmed = line.Trim();
+
+            // Handle block comments that span lines.
+            if (inBlockComment)
+            {
+                var endIndex = trimmed.IndexOf("*/", StringComparison.Ordinal);
+                if (endIndex < 0)
+                {
+                    continue;
+                }
+
+                inBlockComment = false;
+                trimmed = trimmed[(endIndex + 2)..].Trim();
+                line = trimmed;
+
+                if (string.IsNullOrWhiteSpace(trimmed))
+                {
+                    continue;
+                }
+            }
+
+            // Check if the line starts a block comment.
+            if (trimmed.Contains("/*", StringComparison.Ordinal))
+            {
+                var startIdx = trimmed.IndexOf("/*", StringComparison.Ordinal);
+                var endIdx = trimmed.IndexOf("*/", startIdx + 2, StringComparison.Ordinal);
+                if (endIdx >= 0)
+                {
+                    // Block comment opens and closes on same line — strip it out.
+                    trimmed = string.Concat(trimmed.AsSpan(0, startIdx), trimmed.AsSpan(endIdx + 2)).Trim();
+                    line = trimmed;
+                }
+                else
+                {
+                    // Block comment opens but doesn't close on this line.
+                    trimmed = trimmed[..startIdx].Trim();
+                    line = trimmed;
+                    inBlockComment = true;
+                }
+
+                if (string.IsNullOrWhiteSpace(trimmed))
+                {
+                    continue;
+                }
+            }
 
             switch (state)
             {

@@ -260,5 +260,35 @@ namespace Aspire.Cli.Resources {
                 return ResourceManager.GetString("AzureImportFailed", resourceCulture);
             }
         }
+        
+        internal static string ForceOption {
+            get {
+                return ResourceManager.GetString("ForceOption", resourceCulture);
+            }
+        }
+        
+        internal static string OutputExistsNonInteractive {
+            get {
+                return ResourceManager.GetString("OutputExistsNonInteractive", resourceCulture);
+            }
+        }
+        
+        internal static string OutputExistsPrompt {
+            get {
+                return ResourceManager.GetString("OutputExistsPrompt", resourceCulture);
+            }
+        }
+        
+        internal static string SubscriptionRequiredNonInteractive {
+            get {
+                return ResourceManager.GetString("SubscriptionRequiredNonInteractive", resourceCulture);
+            }
+        }
+        
+        internal static string ResourceGroupRequiredNonInteractive {
+            get {
+                return ResourceManager.GetString("ResourceGroupRequiredNonInteractive", resourceCulture);
+            }
+        }
     }
 }

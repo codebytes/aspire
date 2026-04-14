@@ -43,6 +43,11 @@ internal sealed class ImportCommand : BaseCommand
         {
             Subcommands.Add(terraformCommand);
         }
+
+        if (Subcommands.Count == 0)
+        {
+            Hidden = true;
+        }
     }
 
     protected override Task<int> ExecuteAsync(ParseResult parseResult, CancellationToken cancellationToken)

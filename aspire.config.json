@@ -1,0 +1,7 @@
+{
+  "features": {
+    "importBicepCommandEnabled": "true",
+    "importAzureCommandEnabled": "true",
+    "importTerraformCommandEnabled": "true"
+  }
+}

@@ -13,7 +13,7 @@ Teams adopting Aspire today must manually:
 2. Find the corresponding `Aspire.Hosting.Azure.*` NuGet package for each
 3. Write `Add*()` calls for each resource in their AppHost
 4. Wire resources together with `.WithReference()` calls
-5. Decide whether to use `.AsExisting()` (reference deployed resources) or let Aspire provision
+5. Decide whether to use `.RunAsExisting()` (reference deployed resources) or let Aspire provision
 
 This is tedious, error-prone, and discourages adoption — especially for teams with large existing deployments or established IaC practices.
 
@@ -143,15 +143,15 @@ enum ResourceCategory
 | **Feature flag** | `importAzureCommandEnabled` |
 | **Prerequisite check** | Auth failure caught via exception handling |
 
-### Bicep / ARM Templates
+### Bicep
 
 | Aspect | Detail |
 |--------|--------|
 | **Command** | `aspire import bicep --path ./infra` |
-| **Input** | Directory containing `.bicep` files |
-| **Mechanism** | Compiles via `bicep build --stdout` → parses ARM JSON |
+| **Input** | Directory containing `.bicep` files (not raw ARM JSON) |
+| **Mechanism** | Compiles `.bicep` files via `bicep build --stdout` → parses the resulting ARM JSON internally |
 | **Fallback** | `az bicep build --file <file> --stdout` |
-| **Module support** | Recursively flattens `Microsoft.Resources/deployments` |
+| **Module support** | Recursively flattens `Microsoft.Resources/deployments` and child `resources` arrays |
 | **Feature flag** | `importBicepCommandEnabled` |
 | **Prerequisite check** | Validates `bicep` or `az` CLI is installed |
 
@@ -161,6 +161,7 @@ The compiled ARM JSON has a `resources` array. For each entry:
 - Strip API version from type (e.g., `Microsoft.DocumentDB/databaseAccounts@2024-05-15` → `Microsoft.DocumentDB/databaseAccounts`)
 - Extract `name`, `kind`, `location`, `tags`
 - Recurse into nested `Microsoft.Resources/deployments` → `properties.template.resources`
+- Recurse into child `resources` arrays (e.g., databases nested under a SQL server)
 
 ### Terraform HCL
 
@@ -208,11 +209,11 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 // ── Azure Cosmos DB ──────────────────────────────────────
 var contosoCosmos = builder.AddAzureCosmosDB("contoso-cosmos")
-    .AsExisting("contoso-cosmos", "contoso-rg");
+    .RunAsExisting("contoso-cosmos", "contoso-rg");
 
 // ── Azure Cache for Redis ────────────────────────────────
 var contosoCache = builder.AddAzureRedis("contoso-cache")
-    .AsExisting("contoso-cache", "contoso-rg");
+    .RunAsExisting("contoso-cache", "contoso-rg");
 
 // ── Compute Resources (TODO: Replace with local project references) ──
 // Azure Container Apps: contoso-api

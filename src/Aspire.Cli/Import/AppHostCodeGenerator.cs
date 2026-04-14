@@ -28,6 +28,8 @@ internal sealed class AppHostCodeGenerator : IAppHostCodeGenerator
 
     public string GenerateProgramCs(IReadOnlyList<ImportedResource> resources, string sourceLabel, ImportMode mode = ImportMode.New, string? resourceGroup = null)
     {
+        resources = AssignUniqueResourceNames(resources);
+
         var sb = new StringBuilder();
         var modeLabel = mode == ImportMode.Existing ? "existing" : "new";
 
@@ -111,6 +113,9 @@ internal sealed class AppHostCodeGenerator : IAppHostCodeGenerator
         var sb = new StringBuilder();
         sb.AppendLine("<Project Sdk=\"Microsoft.NET.Sdk\">");
         sb.AppendLine();
+        sb.AppendLine("  <!-- TODO: Set the Aspire.AppHost.Sdk version to match your Aspire installation -->");
+        sb.AppendLine("  <Sdk Name=\"Aspire.AppHost.Sdk\" Version=\"10.0.0-preview.5\" />");
+        sb.AppendLine();
         sb.AppendLine("  <PropertyGroup>");
         sb.AppendLine("    <OutputType>Exe</OutputType>");
         sb.AppendLine("    <TargetFramework>net10.0</TargetFramework>");
@@ -118,17 +123,20 @@ internal sealed class AppHostCodeGenerator : IAppHostCodeGenerator
         sb.AppendLine("    <Nullable>enable</Nullable>");
         sb.AppendLine("    <IsAspireHost>true</IsAspireHost>");
         sb.AppendLine("  </PropertyGroup>");
-        sb.AppendLine();
-        sb.AppendLine("  <ItemGroup>");
-        sb.AppendLine("    <!-- TODO: Set package versions to match your Aspire installation -->");
-        sb.AppendLine("    <PackageReference Include=\"Aspire.AppHost.Sdk\" Version=\"10.0.0-preview.5\" />");
 
-        foreach (var package in packages)
+        if (packages.Count > 0)
         {
-            sb.AppendLine(CultureInfo.InvariantCulture, $"    <PackageReference Include=\"{package}\" />");
+            sb.AppendLine();
+            sb.AppendLine("  <ItemGroup>");
+
+            foreach (var package in packages)
+            {
+                sb.AppendLine(CultureInfo.InvariantCulture, $"    <PackageReference Include=\"{package}\" />");
+            }
+
+            sb.AppendLine("  </ItemGroup>");
         }
 
-        sb.AppendLine("  </ItemGroup>");
         sb.AppendLine();
         sb.AppendLine("</Project>");
 
@@ -244,6 +252,62 @@ internal sealed class AppHostCodeGenerator : IAppHostCodeGenerator
         }
 
         return names;
+    }
+
+    internal static IReadOnlyList<ImportedResource> AssignUniqueResourceNames(IReadOnlyList<ImportedResource> resources)
+    {
+        var nameCount = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var resource in resources)
+        {
+            var name = resource.SourceResourceName;
+
+            if (nameCount.TryGetValue(name, out var count))
+            {
+                nameCount[name] = count + 1;
+            }
+            else
+            {
+                nameCount[name] = 1;
+            }
+        }
+
+        // If there are no duplicates, return as-is.
+        if (nameCount.Values.All(c => c <= 1))
+        {
+            return resources;
+        }
+
+        var result = new ImportedResource[resources.Count];
+        var suffixTracker = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+
+        for (var i = 0; i < resources.Count; i++)
+        {
+            var resource = resources[i];
+            var baseName = resource.SourceResourceName;
+
+            if (nameCount[baseName] > 1)
+            {
+                if (!suffixTracker.TryGetValue(baseName, out var suffix))
+                {
+                    suffix = 2;
+                    // First occurrence keeps the original name.
+                    result[i] = resource;
+                    suffixTracker[baseName] = suffix;
+                    continue;
+                }
+
+                var uniqueName = $"{baseName}-{suffix.ToString(CultureInfo.InvariantCulture)}";
+                suffixTracker[baseName] = suffix + 1;
+                result[i] = resource with { SourceResourceName = uniqueName };
+            }
+            else
+            {
+                result[i] = resource;
+            }
+        }
+
+        return result;
     }
 
     private static string ToPascalCase(string name)

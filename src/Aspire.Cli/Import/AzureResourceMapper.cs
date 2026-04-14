@@ -57,7 +57,7 @@ internal sealed class AzureResourceMapper : IResourceMapper
 
             ["Microsoft.Kusto/clusters"] = new MappedResource(
                 "Microsoft.Kusto/clusters",
-                "AddKustoCluster",
+                "AddAzureKustoCluster",
                 "Aspire.Hosting.Azure.Kusto",
                 ResourceCategory.Database,
                 "Azure Data Explorer (Kusto)",

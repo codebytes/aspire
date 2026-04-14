@@ -189,6 +189,13 @@ internal sealed class BicepFileParser(
                 SourceAddress: sourceAddress,
                 Provider: ResourceProvider.Azure,
                 Tags: tags));
+
+            // Recurse into child resources (e.g., Microsoft.Sql/servers containing databases).
+            if (resource.TryGetProperty("resources", out var childResources) &&
+                childResources.ValueKind == JsonValueKind.Array)
+            {
+                ExtractResources(childResources, results);
+            }
         }
     }
 
